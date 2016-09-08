@@ -1,0 +1,40 @@
+
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>index</title>
+        
+        <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">  
+		<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+		<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script type="text/javascript" >
+	        $(document).ready(function() {
+	        	$("#searchUser").click(function() {
+	        		  $.ajax({
+        	             type: "post",
+        	             url: "/action/user/findById",
+        	             data: {id : $("#id").val() },
+        	             dataType: "json",
+        	             success: function(data) {
+        	                         // console.log(data)
+        	                         $("[name='name']").val(data.name);
+        	                         $("[name='desc']").val(data._desc);
+     	                      }
+        	         });
+	        	});	
+	        } );
+        </script>
+    </head>
+    
+    
+    <body>
+    	<form action="/action/user/updateUser" method="post" >
+    		id : <input id="id" type="text" name="id" >		<button id="searchUser" type="button" >填充资料</button>		<br />
+ 			name : <input type="text" name="name" >			<br />
+ 			desc : <input type="text" name="desc" >			<br />
+ 			<button type="submit" > submit </button>
+    	</form>
+        
+    </body>
+    
+</html>
