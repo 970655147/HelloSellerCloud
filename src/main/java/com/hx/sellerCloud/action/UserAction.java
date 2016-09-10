@@ -6,12 +6,10 @@
 
 package com.hx.sellerCloud.action;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.catalina.connector.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -61,7 +59,24 @@ public class UserAction {
 	@RequestMapping(value = "/addUser", method = RequestMethod.POST)
 	public ModelAndView addUser(@RequestParam String name, @RequestParam String desc) {
 		ModelAndView mv = new ModelAndView("result");
+        JSONObject res = addUser0(name, desc);
+        for(Object _key : res.names() ) {
+        	String key = (String) _key;
+        	mv.addObject(key, res.get(key) );
+        }
         
+        return mv;
+	}
+	
+	@RequestMapping(value = "/addUserAsync", method = RequestMethod.POST)
+	@ResponseBody
+	public String addUserAsync(@RequestParam String name, @RequestParam String desc) {
+		JSONObject res = addUser0(name, desc);
+		return res.toString();
+	}
+	
+	// 添加用户并返回结果信息
+	private JSONObject addUser0(String name, String desc) {
 		User user = new User();
 		user.setId(null);
 		user.setName(name);
@@ -74,23 +89,25 @@ public class UserAction {
 		
 		boolean success = true;
 		try {
-			userService.insert(user);
+//			userService.insert(user);
+			userService.saveOrUpdate(user);
 		} catch (Exception e) {
 			success = false;
 			e.printStackTrace();
 		}
 		
-        mv.addObject(Constants.TITLE, "Result");
-        mv.addObject(Constants.OPERATION, "addUser");
+		JSONObject res = new JSONObject();
+        res.element(Constants.TITLE, "Result");
+        res.element(Constants.OPERATION, "addUser");
         if(success) {
-        	mv.addObject(Constants.STATUS, "success");
-        	mv.addObject(Constants.CONTENT, "66666666666666666666666666");
+        	res.element(Constants.STATUS, "success");
+        	res.element(Constants.CONTENT, "66666666666666666666666666");
         } else {
-        	mv.addObject(Constants.STATUS, "failed");
-        	mv.addObject(Constants.CONTENT, "server response error, please contact administrator !");
+        	res.element(Constants.STATUS, "failed");
+        	res.element(Constants.CONTENT, "server response error, please contact administrator !");
         }
         
-        return mv;
+        return res;
 	}
 	
 	@RequestMapping(value = "/sealUser", method = RequestMethod.POST )
@@ -200,7 +217,8 @@ public class UserAction {
 			} else {
 				user.setName(name);
 				user.set_desc(desc);
-				userService.update(user);
+//				userService.update(user);
+				userService.saveOrUpdate(user);
 			}
 		} catch (Exception e) {
 			success = false;

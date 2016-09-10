@@ -47,6 +47,15 @@ public interface BaseService<E> {
 	public void update(E ele) throws Exception;
 	
 	/**
+	 * @Name: saveOrUpdate 
+	 * @Description: TODO
+	 * @param ele
+	 * @throws Exception  
+	 * @Create at 2016年9月10日 下午2:24:18 by '970655147'
+	 */
+	public void saveOrUpdate(E ele) throws Exception;
+	
+	/**
 	 * @Name: removeById 
 	 * @Description: 根据id移除一行记录
 	 * @param id

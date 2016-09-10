@@ -1,17 +1,110 @@
-
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>index</title>
+        
+        <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">  
+		<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+		<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	   <style>
+	        .blue {
+	            background-color: #0094ff;
+	        }
+	        .text-center {
+	            text-align: center;
+	        }
+	        .text_red {
+	        	color:  #ff0000;
+	        }
+    	</style>
+ 	    <script type="text/javascript" >
+ 	    	// 判断给定的变量是否为空
+ 	    	function isEmpty(str) {
+ 	    		return (str == null) || (str == undefined) || (str == '')
+ 	    	}
+	        $(document).ready(function() {
+				$("#addUBtn").click(function() {
+					var name = $("#nameByA").val()
+					if(isEmpty(name) ) {
+						$("#nameErrInfo").html("名称不能为空 !")						
+						return false;
+					}
+					
+					$("#loginModal").modal("hide")
+        		    $.ajax({
+        	             type: "post",
+        	             url: "/action/user/addUserAsync",
+        	             data: {name : $("#nameByA").val(), desc : $("#descByA").val() },
+        	             dataType: "json",
+        	             success: function(data) {
+        	                         console.log(data)
+        	                         // $("title").html(data.title)
+        	                         var resultHtml = data.operation + " " + data.status + "<br />" + data.content
+        	                         $("#addUResult").html(resultHtml)
+     	                      }
+        	         });
+				} )
+	        } )
+	    </script>
     </head>
     
     
     <body>
-    	<form action="/action/user/addUser" method="post" >
- 			name : <input type="text" name="name" >			<br />
- 			desc : <input type="text" name="desc" >			<br />
- 			<button type="submit" > submit </button>
+    	<form action="/action/user/addUser" method="post" role="form" >
+    		<div class="form-group row">
+	    	 	<div class="col-xs-4" >
+	    	 		<div class="input-group">
+	            		<span class="input-group-addon">name</span>
+		 				<input type="text" name="name" class="form-control" />
+	 				</div>
+	 			</div>
+	 			<br/> <br/>
+	 			<div class="col-xs-4" >
+	 				<div class="input-group">
+	 					<span class="input-group-addon">&nbsp;desc</span>
+	 					<input type="text" name="desc" class="form-control" />
+ 					</div>
+	 			</div>
+	 			<br />
+ 			</div>
+ 			<button type="submit" class="btn btn-default" > submit </button>
     	</form>
+        
+
+		<hr />
+	    <input type="button" class="btn btn-primary" data-target="#loginModal" data-toggle="modal" class="form-control bt-red" value="添加用户" />
+	    <div id="addUResult" ></div>
+	    <!-- modal -->
+	    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	        <div class="modal-dialog">
+	            <div class="modal-content">
+	                <div class="modal-header blue">
+	                	<span class="pull-left">添加用户</span> 
+	                    <span class="pull-right" data-dismiss="modal"><span class="btn">X</span></span>
+	                </div>
+	                
+	                <div class="modal-body" >
+	                	<!-- '.row' fix problem about dislocation -->
+	                	<div class="row" >
+			                <div class="col-xs-8" >
+	                    		<input type="text" class="form-control" placeholder="请输入用户名" id="nameByA" />
+			                </div>
+	                    	<span id="nameErrInfo" class="text_red" ></span>
+	
+							<div class="col-xs-8" >                    
+		                   		<input type="text" class="form-control" placeholder="请输入描述信息" id="descByA" />
+		                  	</div> 
+	                   		<span id="descErrInfo" class="text_red" ></span>
+                   		</div>
+	                </div>
+	                
+	                <div class="modal-footer">
+	                    <div id="addUBtn" class="form-control text-center btn-primary" >添加</div>
+	                </div>
+	                
+	            </div>
+	        </div>
+	    </div>
         
     </body>
     

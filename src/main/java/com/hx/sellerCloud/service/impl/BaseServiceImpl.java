@@ -80,12 +80,24 @@ public class BaseServiceImpl<E> implements BaseService<E> {
 	}
 
 	@Override
-	public void update(E ele) {
+	public void update(E ele) throws Exception {
 		JSONObject obj = JSONObject.fromObject(ele);
 		quote(obj);
 		String update = Tools.encapQueryString0(obj, "=", ",");
 		String sql = MysqlSqlGenerator.generateUpdateSql(tableName, update, this.id + "=" + obj.get(this.id) );
 		jdbcTemplate.execute(sql);
+	}
+	
+	@Override
+	public void saveOrUpdate(E ele) throws Exception {
+		JSONObject obj = JSONObject.fromObject(ele);
+		String insertSql = MysqlSqlGenerator.generateInsertSql(tableName, obj);
+		
+		quote(obj);
+		String updateSql = Tools.encapQueryString0(obj, "=", ",");
+		
+		String saveOrUpdateSql = insertSql + " on duplicate key update " + updateSql;
+		jdbcTemplate.execute(saveOrUpdateSql);
 	}
 
 	@Override
