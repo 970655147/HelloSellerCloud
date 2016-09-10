@@ -1,4 +1,4 @@
-﻿HXBlog
+HelloSellerCloud
 ====
 一个用户的增删改查的小demo
 涉及的技术 : SpringBoot, SpringJdbcTemplate, Freemarker, daterangepicker等等
